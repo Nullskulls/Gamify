@@ -37,20 +37,14 @@ pos get_input() {
 
 
 void clean(pos position, char** board, gamestate* state) {
-    pos temp = position;
-    board[position.row][position.col] = state->board[position.row][position.col];
-    for (int foo = -1; foo <= 1; foo++) {
-        for (int bar = -1; bar <= 1; bar++) {
-            if (position.row + foo >= MAX_ROWS || position.col + bar >= MAX_COLS || position.row + foo < 0 || position.col + bar < 0) {
-                continue;
-            }
-            if (state->board[position.row + foo][position.col + bar] != '*' && board[position.row + foo][position.col + bar] == '?') {
-                temp.row = position.row + foo;
-                temp.col = position.col + bar;
-                clean(temp, board, state);
-            }
-            else {
-                return;
+    if (state->board[position.row][position.col] == 0) {
+        board[position.row][position.col] = state->board[position.row][position.col];
+        for (int i = 1; i >= -1; i--) {
+            for (int j = 1; j >= -1; j++) {
+                if (position.row + i >= MAX_ROWS || position.col + j >= MAX_COLS || position.row + i < 0 || position.col + j < 0) {
+                    continue;
+                }
+                board[position.row + i][position.col + j] = state->board[position.row + i][position.col + j];
             }
         }
     }
