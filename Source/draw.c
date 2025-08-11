@@ -9,7 +9,11 @@ void draw_state(char** state) {
     for (int i = 0; i < MAX_ROWS; i++) {
         printf("%c #", 'P'-i);
         for (int j = 0; j < MAX_COLS; j++) {
-            printf("%c ", state[i][j]);
+            if (state[i][j] == 'F' || state[i][j] == '?' || state[i][j] == '*') {
+                printf("%c ", state[i][j]);
+            }else {
+                printf("%i ", state[i][j]);
+            }
         }
         printf("#\n");
     }

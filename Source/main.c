@@ -6,7 +6,9 @@ int main(void) {
     if (state == NULL) {
         return 100;
     }
-    get_input();
     setup_gamestate(state);
-    draw_state(board);
+    while (true) {
+        draw_state(board);
+        player(state, board);
+    }
 }

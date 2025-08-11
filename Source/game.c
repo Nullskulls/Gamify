@@ -41,7 +41,7 @@ void enumarate_board(gamestate* state) {
                         if (i+bar >= MAX_ROWS || j+foo >= MAX_COLS || i+bar < 0 || j+foo < 0) {
                             continue;
                         }
-                        if (state->board[i+bar][j+foo] == '*' && foo != 0 && bar != 0) {
+                        if (state->board[i+bar][j+foo] == '*'){
                             number++;
                         }
                     }
