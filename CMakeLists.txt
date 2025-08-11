@@ -7,4 +7,5 @@ add_executable(minesweeper
         Source/main.c
         Source/game.c
         Source/draw.c
+        Source/handlers.c
 )

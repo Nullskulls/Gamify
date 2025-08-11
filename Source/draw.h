@@ -4,4 +4,4 @@
 #define DRAW_H
 
 #endif //DRAW_H
-void draw_state(gamestate* state);
+void draw_state(char** state);

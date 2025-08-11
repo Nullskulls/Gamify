@@ -53,9 +53,7 @@ void enumarate_board(gamestate* state) {
 }
 
 void setup_gamestate(gamestate* state) {
-    state->flags = {};
     state->gameover = false;
-    state->score = 0;
     state->board = malloc(MAX_ROWS * sizeof(char*));
     if (state->board == NULL) {
         free(state);
@@ -89,4 +87,5 @@ char** setup_state() {
             board[i][j] = '?';
         }
     }
+    return board;
 }
