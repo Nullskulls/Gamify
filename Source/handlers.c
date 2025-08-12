@@ -43,55 +43,50 @@ pos get_input() {
     return position; //return the index of the user inputted tile
 }
 
-
-/*
- *Unkown if the function will remain here so i will not document it
- */
-bool not_in_grid(pos position, pos* grid[256]) {
-    for (int i = 0; i < 16*16; i++) {
-        if (position.row == grid[i]->row && position.col == grid[i]->col) {
-            return false;
+void fill_top(pos position, char** board, gamestate* state) {
+    pos tmp = position;
+    for (int i = -1; i <= 1; i++) {
+        if (position.col+i < 0 || position.col+i > MAX_COLS || position.col+i > MAX_COLS || position.row > MAX_ROWS || state->board[position.row][position.col + i] == '*') {
+            continue;
         }
-    }
-    return true;
-}
-/*
- *Same applies here
- */
-void add_grid(pos position, pos* grid[256]) {
-    for (int i = 0; i < 256; i++) {
-        if (grid[i]->row == -1 && grid[i]->col == -1) {
-
+        if (position.row-1 < 0 || position.row > MAX_ROWS) {
+            break;
         }
+        board[position.row][position.col + i] = state->board[position.row][position.col + i];
+        tmp.col = position.col + i;
+        fill_next(-1, tmp, board, state);
     }
 }
-/*
- *And here
- */
-void clean(pos position, char** board, gamestate* state, pos* grid) {
-    pos temp;
-    for (int i = 1; i >= -1; i--) {
-        for (int j = 1; j >= -1; j--) {
-            if (position.row+i >= MAX_ROWS || position.col+j >= MAX_COLS || state->board[position.row+i][position.col+j] == '*' || board[position.row+i][position.col+j] != '?') {
+
+void fill_next(int index, pos position, char** board, gamestate* state){
+    if (index == -1) {
+        for (int i = -1; i <= 1; i++) {
+            pos tmp = position;
+            if (position.col + i >= MAX_COLS || position.col + i < 0) {
+                continue;
+            }
+            if ( position.row + index < 0 || position.row + index >= MAX_ROWS) {
+                break;
+            }
+            tmp.row += index;
+            tmp.col += i;
+            if (tmp.row-1 > 0 && (board[tmp.row-1][tmp.col] != '?' && board[tmp.row][tmp.col] != 'F')) {
+                continue;
+            }
+            fill_top(tmp, board, state);
+        }
+    }
+}
+
+void floodfill(pos position, char** board, gamestate* state) {
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            if (position.row+i >= MAX_ROWS || position.col+j >= MAX_COLS || position.row+i < 0 || position.col+j < 0 || state->board[position.row+i][position.col+j] == '*') {
                 continue;
             }
             board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
-            temp.row = position.row+i;
-            temp.col = position.col+j;
-            if (not_in_grid(temp, grid)) {
-                add_grid(temp, grid);
-                clean(temp, board, state, grid);
-            }
         }
-    }
-}
-/*
- *also here
- */
-void fill_grid(pos* grid) {
-    for (int i = 0; i < 256; i++) {
-        grid->row = -1;
-        grid->col = -1;
+        fill_next(i, position, board, state);
     }
 }
 
@@ -109,8 +104,7 @@ void press(pos position, char** board, gamestate* state) {
     if (grid == NULL) {
         exit(107);
     }
-    fill_grid(grid);
-    clean(position, board, state, grid); //floodfill the tile
+    floodfill(position, board, state);
 }
 
 

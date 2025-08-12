@@ -8,6 +8,7 @@ int main(void) {
     }
     setup_gamestate(state); //setup the gamestate
     while (true) {
+        system("cls");
         draw_state(board); //each frame draw board and ask the player what they want to do
         player(state, board);
     }
