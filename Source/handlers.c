@@ -34,20 +34,39 @@ pos get_input() {
     free(str);
     return position;
 }
-
-
-void clean(pos position, char** board, gamestate* state) {
-    if (state->board[position.row][position.col] == 0) {
-        board[position.row][position.col] = state->board[position.row][position.col];
-        for (int i = 1; i >= -1; i--) {
-            for (int j = 1; j >= -1; j++) {
-                if (position.row + i >= MAX_ROWS || position.col + j >= MAX_COLS || position.row + i < 0 || position.col + j < 0) {
-                    continue;
-                }
-                board[position.row + i][position.col + j] = state->board[position.row + i][position.col + j];
+void clear_row(pos position, char** board, gamestate* state) {
+    for (int j = 0; position.col + j < MAX_COLS; j++) {
+        for (int i = 0; position.row + i < MAX_ROWS; i++) {
+            if (state->board[position.row+i][position.col+j] == '*') {
+                break;
             }
+            board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
+        }
+        for (int i = 0; position.row - i >= 0; i--) {
+            if (state->board[position.row+i][position.col+j] == '*') {
+                break;
+            }
+            board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
         }
     }
+    for (int j = 0; position.col + j >= 0; j--) {
+        for (int i = 0; position.row + i < MAX_ROWS; i++) {
+            if (state->board[position.row+i][position.col+j] == '*') {
+                break;
+            }
+            board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
+        }
+        for (int i = 0; position.row - i >= 0; i--) {
+            if (state->board[position.row+i][position.col+j] == '*') {
+                break;
+            }
+            board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
+        }
+    }
+}
+
+void clean(pos position, char** board, gamestate* state) {
+    clear_row(position, board, state);
 }
 
 void press(pos position, char** board, gamestate* state) {
