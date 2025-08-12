@@ -1,52 +1,75 @@
 #include "handlers.h"
 
+/*
+ *Function to see if the user's input is invalid, It's not foolproof tho it works.
+ */
 bool invalid_input(const char* str) {
-    if (str[2] != '\0') {
-        return true;
+    if (str[2] != '\0') {//if third index of the input is not the string termination char
+        return true; //return that the input is invalid
     }
-    if (str[0] - 'A' >= MAX_ROWS || str[1] - 'A' >= MAX_COLS || str[0] - 'A' < 0 || str[1] - 'A' < 0) {
-        return true;
+    if (str[0] - 'A' >= MAX_ROWS || str[1] - 'A' >= MAX_COLS || str[0] - 'A' < 0 || str[1] - 'A' < 0) { //first and second index of the str are not between A-P
+        return true; //return that the input is invalid
     }
-    return false;
+    return false; //if all conditions are false return
 }
 
+
+/*
+ *Function to see if the user inputted operator is within the specified 3 (or if I add more)
+ */
 bool invalid_operator(const char operator) {
-    if (operator == 'U' || operator == 'F' || operator == 'P') {
-        return false;
+    if (operator == 'U' || operator == 'F' || operator == 'P') { //if the operator is (U, F, P)
+        return false; //return that the operator is valid
     }
-    return true;
+    return true; //otherwise return invalid
 }
 
+
+/*
+ *Function used to prompt the user for cords input (checking for validity implemented)
+ */
 pos get_input() {
-    char* str = malloc(sizeof(char)*3);
+    char* str = malloc(sizeof(char)*3); //allocate 3 chars (1 terminator char and 2 input)
     if (str == NULL) {
-        exit(105);
+        exit(105); //if malloc fails exit with special exit code
     }
-    str[0] = 'Q';
-    str[1] = 'Q';
-    str[2] = '\0';
-    while (invalid_input(str)) {
+    do {
         scanf("%2s", str);
-    }
+    }while (invalid_input(str)); //keep getting input until the user input is valid
     pos position;
     position.row = 'P' - str[0];
-    position.col = str[1] - 'A';
-    free(str);
-    return position;
+    position.col = str[1] - 'A'; //turn the user input from chars to indexing
+    free(str); //free the string allocated memory
+    return position; //return the index of the user inputted tile
 }
 
-bool not_in_grid(pos position, pos grid[16*16]) {
+
+/*
+ *Unkown if the function will remain here so i will not document it
+ */
+bool not_in_grid(pos position, pos* grid[256]) {
     for (int i = 0; i < 16*16; i++) {
-        if (position.row == grid[i].row && position.col == grid[i].col) {
+        if (position.row == grid[i]->row && position.col == grid[i]->col) {
             return false;
         }
     }
     return true;
 }
+/*
+ *Same applies here
+ */
+void add_grid(pos position, pos* grid[256]) {
+    for (int i = 0; i < 256; i++) {
+        if (grid[i]->row == -1 && grid[i]->col == -1) {
 
-void clean(pos position, char** board, gamestate* state) {
+        }
+    }
+}
+/*
+ *And here
+ */
+void clean(pos position, char** board, gamestate* state, pos* grid) {
     pos temp;
-    pos grid[16*16];
     for (int i = 1; i >= -1; i--) {
         for (int j = 1; j >= -1; j--) {
             if (position.row+i >= MAX_ROWS || position.col+j >= MAX_COLS || state->board[position.row+i][position.col+j] == '*' || board[position.row+i][position.col+j] != '?') {
@@ -55,32 +78,60 @@ void clean(pos position, char** board, gamestate* state) {
             board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
             temp.row = position.row+i;
             temp.col = position.col+j;
-            clean(temp, board, state);
+            if (not_in_grid(temp, grid)) {
+                add_grid(temp, grid);
+                clean(temp, board, state, grid);
+            }
         }
     }
 }
+/*
+ *also here
+ */
+void fill_grid(pos* grid) {
+    for (int i = 0; i < 256; i++) {
+        grid->row = -1;
+        grid->col = -1;
+    }
+}
 
+
+/*
+ *Function used to handle the user pressing on a tile
+ */
 void press(pos position, char** board, gamestate* state) {
-    if (state->board[position.row][position.row] == '*') {
+    if (state->board[position.row][position.row] == '*') { //if said tile is a trap exit
         printf("you lost!");
         draw_state(state->board);
         exit(0);
     }
-    clean(position, board, state);
+    pos* grid = malloc(sizeof(pos)*256); //test code
+    if (grid == NULL) {
+        exit(107);
+    }
+    fill_grid(grid);
+    clean(position, board, state, grid); //floodfill the tile
 }
 
+
+/*
+ *Function used to handle all user interaction with the board
+ */
 void player(gamestate* state, char** board) {
-    pos position = get_input();
-    char operator = 'q';
+    pos position = get_input(); //start by getting index of the tile from user
+    char operator;
+
     printf("Operations: (F: Set to flag, U: Unflag, P: Press)");
-    while (invalid_operator(operator)) {
+
+    do{
         scanf("%c", &operator);
-    }
-    if (operator == 'F') {
+    }while (invalid_operator(operator));
+
+    if (operator == 'F') { //if user wants to add a flag set the flag down on the user viewed board
         board[position.row][position.col] = 'F';
-    }else if (operator == 'U') {
+    }else if (operator == 'U') { //if the user unflags a position set it back to '?'
         board[position.row][position.col] = '?';
-    }else {
+    }else { //otherwise (which is going to be P) send position to a handler function to handle the user's press
         press(position, board, state);
     }
 }
