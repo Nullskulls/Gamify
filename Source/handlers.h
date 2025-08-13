@@ -10,3 +10,6 @@
 
 void player(gamestate* state, char** board);
 void fill(int index, pos position, char** board, gamestate* state);
+void freer(gamestate* state, char** board);
+char get_char();
+void count_points(gamestate* state, char** board);

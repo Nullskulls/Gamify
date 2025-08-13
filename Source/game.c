@@ -73,6 +73,7 @@ void enumarate_board(gamestate* state) {
  *Function used to initialize the game state the first time the game is run
  */
 void setup_gamestate(gamestate* state) {
+    state->score = 0;
     state->gameover = false;
     state->board = malloc(MAX_ROWS * sizeof(char*)); //allocate memory for the state's board
     if (state->board == NULL) {

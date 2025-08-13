@@ -18,7 +18,7 @@ bool invalid_input(const char* str) {
  *Function to see if the user inputted operator is within the specified 3 (or if I add more)
  */
 bool invalid_operator(const char operator) {
-    if (operator == 'U' || operator == 'F' || operator == 'P') { //if the operator is (U, F, P)
+    if (operator == 'U' || operator == 'F' || operator == 'P' || operator == 'E') { //if the operator is (U, F, P, E)
         return false; //return that the operator is valid
     }
     return true; //otherwise return invalid
@@ -185,23 +185,66 @@ void press(pos position, char** board, gamestate* state) {
 
 
 /*
+ *Function to get a single char
+ */
+char get_char() {
+    char operator;
+    do{
+        scanf("%c", &operator);
+    }while (invalid_operator(operator));
+    return operator;
+}
+
+/*
  *Function used to handle all user interaction with the board
  */
 void player(gamestate* state, char** board) {
     pos position = get_input(); //start by getting index of the tile from user
-    char operator;
 
-    printf("Operations: (F: Set to flag, U: Unflag, P: Press, E: End)\n$");
-
-    do{
-        scanf("%c", &operator);
-    }while (invalid_operator(operator));
+    printf("Operations: (F: Set to flag, U: Unflag, P: Press, E: End, B: Back)\n$");
+    char operator = get_char();
 
     if (operator == 'F') { //if user wants to add a flag set the flag down on the user viewed board
         board[position.row][position.col] = 'F';
-    }else if (operator == 'U') { //if the user unflags a position set it back to '?'
+    }else if (operator == 'U') {
+        //if the user unflags a position set it back to '?'
         board[position.row][position.col] = '?';
+    }else if (operator == 'E') {
+        state->gameover = true; // set the game over flag to be true so the end sequence can start
+    }else if (operator == 'B') {
+        //do nothing lol
     }else { //otherwise (which is going to be P) send position to a handler function to handle the user's press
         press(position, board, state);
+    }
+}
+
+/*
+ *Function to free all heap allocated memory after each round
+ */
+void freer(gamestate* state, char** board) {
+    for (int i = 0; i < MAX_ROWS; i++) {
+        free(board[i]); // free each list inside the 2d array
+        free(state->board[i]);
+    }
+    free(board);
+    free(state);
+}
+
+
+/*
+ *Function used to count player's total score after each round
+ */
+void count_points(gamestate* state, char** board) {
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            if (board[i][j] == 'F') { //if the user set down a flag
+                if (state->board[i][j] == '*') { //if a trap is there
+                    state->score += 10; //increase their score by 10
+                }
+                else {
+                    state->score -= 10; //otherwise decrease their score by 10
+                }
+            }
+        }
     }
 }

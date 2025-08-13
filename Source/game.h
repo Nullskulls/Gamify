@@ -6,6 +6,7 @@ extern int MAX_MINES;
 typedef struct {
     char** board;
     bool gameover;
+    int score;
 } gamestate;
 
 typedef struct {
