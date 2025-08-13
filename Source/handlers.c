@@ -248,3 +248,40 @@ void count_points(gamestate* state, char** board) {
         }
     }
 }
+
+int file_exists(const char* filename) {
+    FILE* file; //initialize a file pointer
+    if ((file = fopen(filename, "r"))) { //if fopen returns a pointer
+        fclose(file); //close the file to avoid unexpected behavior
+        return 1; //return true
+    }
+    return 0; // else return false
+}
+
+int get_highest_score(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit( 303);
+    }
+    char buffer[16];
+    if (!fgets(buffer, sizeof(buffer), file)) {
+        fprintf(stderr, "Error reading file");
+        fclose(file);
+        exit(304);
+    }
+    int value = atoi(buffer);
+    fclose(file);
+    return value;
+}
+
+void save_highest_score(const char* filename, int score) {
+    FILE* file = fopen(filename, "w");
+    fprintf(file, "%d", score);
+
+}
+#ifdef _WIN32
+void sleep(unsigned int seconds) {
+    Sleep(seconds * 1000);
+}
+#endif

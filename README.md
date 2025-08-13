@@ -17,6 +17,7 @@ Completely written in C over the span of 2-3 days built with 2d nested arrays an
 * Cross-platform compatible (as long as you compile it yourself lol)
 * Point system 
 * Modes ranging from (Hard - Easy)
+* Persistent storage
 * Working! (maybe)
 ---
 
