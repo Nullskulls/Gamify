@@ -43,41 +43,117 @@ pos get_input() {
     return position; //return the index of the user inputted tile
 }
 
+
+/*
+ *Function to fill from bottom to top
+ */
 void fill_top(pos position, char** board, gamestate* state) {
-    pos tmp = position;
+    pos tmp = position; //create a copy of the cords to be passed to fill later
     for (int i = -1; i <= 1; i++) {
-        if (position.col+i < 0 || position.col+i > MAX_COLS || position.col+i > MAX_COLS || position.row > MAX_ROWS || state->board[position.row][position.col + i] == '*') {
-            continue;
+        if (position.col+i < 0 || position.col+i >= MAX_COLS || position.row >= MAX_ROWS || state->board[position.row][position.col + i] == '*') {
+            continue; //if out of bounds (col wise) continue
         }
         if (position.row-1 < 0 || position.row > MAX_ROWS) {
+            break; //if row is out of bounds break to avoid endless recursion
+        }
+        board[position.row][position.col + i] = state->board[position.row][position.col + i]; //set the current tile to what it is in the state
+        tmp.col = position.col + i; //increment col by i
+        fill(-1, tmp, board, state); //pass it to fill
+    }
+}
+/*
+ *Function from top to bottom
+ */
+void fill_bottom(pos position, char** board, gamestate* state) {
+    pos tmp = position; //same as top pretty much so leaving undocumented
+    for (int i = -1; i <= 1; i++) {
+        if (position.col+i < 0 || position.col+i >= MAX_COLS || position.row >= MAX_ROWS || state->board[position.row][position.col + i] == '*') {
+            continue;
+        }
+        if (position.row+1 < 0 || position.row+1 >= MAX_ROWS) {
             break;
         }
         board[position.row][position.col + i] = state->board[position.row][position.col + i];
         tmp.col = position.col + i;
-        fill_next(-1, tmp, board, state);
+        fill(1, tmp, board, state);
     }
 }
 
-void fill_next(int index, pos position, char** board, gamestate* state){
-    if (index == -1) {
+
+/*
+ *Main floodfill helper function
+ */
+void fill(int index, pos position, char** board, gamestate* state){
+    if (index == -1) { //if index is -1 (going upwards due to how 2D arrays are and im not a hooligan and printing it backwards
         for (int i = -1; i <= 1; i++) {
-            pos tmp = position;
-            if (position.col + i >= MAX_COLS || position.col + i < 0) {
+            pos tmp = position; //make a copy of the cords to be passed to fill top later
+            if (position.col + i >= MAX_COLS || position.col + i < 0) { //if col is out of bounds skip
                 continue;
             }
             if ( position.row + index < 0 || position.row + index >= MAX_ROWS) {
+                break; //if row is out of bounds break
+            }
+            tmp.row += index; //increment the row by index (go upwards)
+            tmp.col += i; //increment the col by i (left, right or center depending on i)
+            if (tmp.row-1 > 0 && (board[tmp.row-1][tmp.col] != '?' && board[tmp.row-1][tmp.col] != 'F')) { //if tile has been cleared before
+                continue; //skip
+            }
+            fill_top(tmp, board, state); //pass new cords to fill top to keep doing it until you reach a trap or the top
+        }
+    }
+    else if (index == 1) { //else if index is 1 (going downwards) <yes I know it gets confusing>
+        for (int i = -1; i <= 1; i++) {
+            pos tmp = position; //make a copy same as above
+            if (position.col + i >= MAX_COLS || position.col + i < 0) {
+                continue; //same applies for everything here so leaving undocumented
+            }
+            if (position.row + index < 0 || position.row + index >= MAX_ROWS) {
                 break;
             }
             tmp.row += index;
             tmp.col += i;
-            if (tmp.row-1 > 0 && (board[tmp.row-1][tmp.col] != '?' && board[tmp.row][tmp.col] != 'F')) {
+            if (tmp.row + 1 <= MAX_ROWS-1 && (board[tmp.row+1][tmp.col] != '?' && board[tmp.row+1][tmp.col] != 'F')) {
                 continue;
             }
-            fill_top(tmp, board, state);
+            fill_bottom(tmp, board, state);
+        }
+    }
+    //clearing sideways
+    for (int i = -1; i <= 1; i++) {
+        pos tmp = position; //make a copy of cords
+        if (position.row + i >= MAX_ROWS || position.row + i < 0) {
+            continue; //if
+        }else if (state->board[position.row][position.col + i] == '*' || board[position.row][position.col + i] != 'F' || board[position.row][position.col + i] == '?') {
+            break;
+        }
+        board[position.row][position.col + i] = state->board[position.row][position.col + i];
+        tmp.col = position.col + i;
+        fill(0, tmp, board, state);
+    }
+}
+
+/*
+ *Function made as a failsafe, if a number incremented is 0 it just clears everything around it
+ */
+void final_passthrough(char** board, gamestate* state) {
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            if (board[i][j] == 0) {
+                for (int k = -1; k <= 1; k++) {
+                    for (int l = -1; l <= 1; l++) {
+                        if (i + l < MAX_ROWS && i + l >= 0 && j + k < MAX_COLS && j + k >= 0) {
+                            board[i + l][j + k] = state->board[i + l][j + k];
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
+/*
+ *Main flood filling function
+ */
 void floodfill(pos position, char** board, gamestate* state) {
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -85,9 +161,11 @@ void floodfill(pos position, char** board, gamestate* state) {
                 continue;
             }
             board[position.row+i][position.col+j] = state->board[position.row+i][position.col+j];
+
         }
-        fill_next(i, position, board, state);
+        fill(i, position, board, state);
     }
+    final_passthrough(board, state);
 }
 
 
@@ -95,10 +173,8 @@ void floodfill(pos position, char** board, gamestate* state) {
  *Function used to handle the user pressing on a tile
  */
 void press(pos position, char** board, gamestate* state) {
-    if (state->board[position.row][position.row] == '*') { //if said tile is a trap exit
-        printf("you lost!");
-        draw_state(state->board);
-        exit(0);
+    if (state->board[position.row][position.col] == '*') { //if said tile is a trap exit
+        state->gameover = true;
     }
     pos* grid = malloc(sizeof(pos)*256); //test code
     if (grid == NULL) {
@@ -115,7 +191,7 @@ void player(gamestate* state, char** board) {
     pos position = get_input(); //start by getting index of the tile from user
     char operator;
 
-    printf("Operations: (F: Set to flag, U: Unflag, P: Press)");
+    printf("Operations: (F: Set to flag, U: Unflag, P: Press, E: End)\n$");
 
     do{
         scanf("%c", &operator);
