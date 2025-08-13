@@ -5,3 +5,4 @@
 
 #endif //DRAW_H
 void draw_state(char** state);
+void cookie_prompt(cookie* state);

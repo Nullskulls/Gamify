@@ -210,7 +210,7 @@ void player(gamestate* state, char** board) {
     }else if (operator == 'B') {
         //do nothing lol
     }else if (operator == '`') { // cheat mode if you want to cheat lol
-        printf("Cheat mode activated!");
+        printf("Cheat mode activated!\n");
         draw_state(state->board); //draw the inner game state so the user can see where the mines are
         sleep(2); //sleep for two seconds so the user has time to actually react
     }else { //otherwise (which is going to be P) send position to a handler function to handle the user's press
@@ -285,3 +285,196 @@ void sleep(unsigned int seconds) {
     Sleep(seconds * 1000);
 }
 #endif
+
+void minesweeper() {
+    int highest_score;
+    if (file_exists("minesweeper_score.txt")) {
+        highest_score = get_highest_score("minesweeper_score.txt"); //get the highest score from persistent storage
+    }else {
+        highest_score = 0; //default score to 0
+        save_highest_score("minesweeper_score.txt", 0);
+    }
+    srand(time(NULL)); //seed random so you don't have to replay the same state over and over
+    while (1) {
+        printf("Welcome to Minesweeper\nPick difficulty (P: Hard, E: Medium, B: Easy)\n$");
+        char level = get_char();
+        if (level == 'P') {
+            MAX_ROWS = 24; //make the board bigger (default is 16) and add more mines (default is 50)
+            MAX_COLS = 24;
+            MAX_MINES = 90;
+        }else if (level == 'B') {
+            MAX_ROWS = 8; //shrink the board and decrease the amount of mines
+            MAX_COLS = 8;
+            MAX_MINES = 12;
+        }
+        char** board = setup_state(); //initialize the board that is to be displayed
+        gamestate* state = malloc(sizeof(gamestate)); //allocate actual memory for the game state
+        if (state == NULL) {
+            exit(100); //exit if malloc fails
+        }
+        setup_gamestate(state); //set up the gamestate
+        while (!state->gameover) { //while the game is not over
+            system(CLEAR); //clear the screen (Linux and Windows compatible)
+            draw_state(board); //each frame draw board and ask the player what they want to do
+            player(state, board); //start the new input process
+        }
+        system(CLEAR); //if the game is over clear the screen
+        draw_state(state->board); //draw the game state so the user sees what they did wrong
+        count_points(state, board); //count their total points by how many flags are placed correctly and incorrectly
+        if (highest_score < state->score) { //if the highscore is less than the current game score
+            highest_score = state->score; //save the current game score to highscore to be used later
+            save_highest_score("minesweeper_score.txt", highest_score); //save the highest score to persistent storage
+        }
+        printf("Game Over\nYour score is: %i!, Your highest score is: %i\n", state->score, highest_score); //display score data to user
+        freer(state, board); //free all heap allocated memory
+        printf("Would you like to play again? (P: Play, E: Exit)\n$"); //prompt the user for if they want to play again
+        char operator = get_char();
+        if (operator == 'E') { //if not exit with code error 0 (I think 0 was for everything went right)
+            save_highest_score("minesweeper_score.txt", highest_score); //save the highest score to persistent storage
+            break;
+        }
+        //otherwise continue in the while loop
+    }
+}
+
+bool invalid_cookie(char operator) {
+    if (operator != 'E' && operator != 'R' && operator != 'S' && operator != 10 && operator != 13 && operator != 'H') {
+        return true;
+    }
+    return false;
+}
+
+char  get_prompt_cookie() {
+    char operator;
+    do{
+        scanf("%c", &operator);
+    }while (invalid_cookie(operator)); //while the user input is invalid keep scanning for input
+    return operator;
+}
+
+void setup_cookie_state(cookie* state) {
+    state->rebirth;
+    state->bonus = false;
+    state->cookies = 0;
+    state->multiplier = 1;
+    state->luck = 100;
+}
+
+int get_int() {
+    int operator;
+    scanf("%i", &operator);
+    if (operator > 0 && operator < 9) {
+        return operator;
+    }
+    return get_int();
+}
+
+
+void shop(cookie* state) {
+    printf("Available for purchase:-\n\n[1] Extra keyboard: 100 Cookies\n *Adds a +1 Cookie multiplier\n[2] More Fingers: 500 Cookies\n *Adds a +5 Cookie multiplier\n[3] More computers: 2,000 Cookies\n *Adds +25 Cookie multiplier\n -There only so many USB ports </3\n");
+    printf("[4] Hire a relative to click: 50,000 Cookies\n *Adds +600 Cookie multiplier\n -Create your army!!!\n [5] Dunk them in milk: 200,000\n *Adds +1500 Cookie multiplier\n *It somehow duplicates now???\n[6] Make a cookie firm: 10,000,000\n *Adds +5000 Cookie Multiplier\n -We offer health insurance too");
+    printf("[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8]\n Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
+    if (state->rebirth > 1 ) {
+        printf("gonna add it later");
+    }
+    printf("\n\n$");
+    int operator = get_int();
+    if (operator == 1) {
+        if (state->cookies < 100) {
+            printf("Not enough cookies brokie.\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 100;
+        state->multiplier++;
+    }else if (operator == 2) {
+        if (state->cookies < 500) {
+            printf("This isn't a charity...\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 500;
+        state->multiplier+=5;
+    }else if (operator == 3) {
+        if (state->cookies < 2000) {
+            printf("Your pc caught fire. \n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 2000;
+        state->multiplier+=25;
+    }else if (operator == 4) {
+        if (state->cookies < 50000) {
+            printf("You got left on seen.\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 50000;
+        state->multiplier+=600;
+    }else if (operator == 5) {
+        if (state->cookies < 200000) {
+            printf("You spilled the milk somehow...\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 200000;
+        state->multiplier+=1500;
+    }else if (operator == 6) {
+        if (state->cookies < 100000000) {
+            printf("Deal fell through..\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 100000000;
+        state->multiplier+=5000;
+    }else if (operator == 7) {
+        if (state->cookies < 200000000) {
+            printf("You got sued for having a monopoly..\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 200000000;
+        state->multiplier+=75000;
+    }else if (operator == 8) {
+        if (state->cookies < 1000000000) {
+            printf("The dungeon collapsed ontop of your treasured cookies..\n");
+            sleep(1);
+            return;
+        }
+        state->cookies -= 1000000000;
+        state->multiplier+=250000;
+    }else if (state->multiplier < 1) {
+        printf("item doesn't exist or not unclocked");
+    }else {
+        printf("adding soon...")
+    }
+}
+
+void clicker(void) {
+    srand(time(NULL));
+    cookie* state = malloc(sizeof(cookie));
+    setup_cookie_state(state);
+    while (true) {
+        system(CLEAR);
+        cookie_prompt(state);
+        char operator = get_prompt_cookie();
+        if (operator == 13 || operator == 10) {
+            if (rand() % state->luck == 1) {
+                state->cookies += 2*state->multiplier;
+                state->bonus = true;
+            }else {
+                state->cookies += state->multiplier;
+            }
+        }else if (operator == 'H') {
+            system(CLEAR);
+            printf("How to play:\n\n->Press enter to get cookies\n->You by default have a 1 in 100 got getting a crit\n *A crit gives 2X your multiplier\nYou can increase your multiplier by pressing S to open the shop\n\nEnter to continue.\n\n$");
+            sleep(3);
+        }else if (operator == 'E') {
+            free(state);
+            break;
+        }else if (operator == 'S') {
+            system(CLEAR);
+            shop(state);
+        }
+    }
+}

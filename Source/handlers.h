@@ -19,3 +19,6 @@ void count_points(gamestate* state, char** board);
 int file_exists(const char* filename);
 int get_highest_score(const char* filename);
 void save_highest_score(const char* filename, int score);
+void minesweeper(void);
+void clicker(void);
+#include <time.h>

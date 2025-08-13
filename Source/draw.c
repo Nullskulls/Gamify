@@ -29,3 +29,11 @@ void draw_state(char** state) {
     }
     printf("\nEnter position! (example: AA <ROW-COL)\n$"); //display input instructions
 }
+
+void cookie_prompt(cookie* state) {
+    printf("COOOOKIESSS\n\n\nCookie count: %i    Cookie multiplier: %i     You have a 1 in %i chance for a crit.\n(Press enter to gather cookies, E to Exit, S to open the shop, R to rebirth, H for help menu)\n\n$", state->cookies, state->multiplier, state->luck);
+    if (state->bonus == true) {
+        state->bonus = false;
+        printf("BONUS!");
+    }
+}
