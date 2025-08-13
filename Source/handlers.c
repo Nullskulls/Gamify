@@ -353,7 +353,7 @@ char  get_prompt_cookie() {
 }
 
 void setup_cookie_state(cookie* state) {
-    state->rebirth;
+    state->rebirth = 1;
     state->bonus = false;
     state->cookies = 0;
     state->multiplier = 1;
@@ -371,11 +371,16 @@ int get_int() {
 
 
 void shop(cookie* state) {
-    printf("Available for purchase:-\n\n[1] Extra keyboard: 100 Cookies\n *Adds a +1 Cookie multiplier\n[2] More Fingers: 500 Cookies\n *Adds a +5 Cookie multiplier\n[3] More computers: 2,000 Cookies\n *Adds +25 Cookie multiplier\n -There only so many USB ports </3\n");
-    printf("[4] Hire a relative to click: 50,000 Cookies\n *Adds +600 Cookie multiplier\n -Create your army!!!\n [5] Dunk them in milk: 200,000\n *Adds +1500 Cookie multiplier\n *It somehow duplicates now???\n[6] Make a cookie firm: 10,000,000\n *Adds +5000 Cookie Multiplier\n -We offer health insurance too");
-    printf("[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8]\n Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
-    if (state->rebirth > 1 ) {
-        printf("gonna add it later");
+    printf(
+        "Available for purchase:-\n\n[1] Extra keyboard: 100 Cookies\n *Adds a +1 Cookie multiplier\n[2] More Fingers: 500 Cookies\n *Adds a +5 Cookie multiplier\n[3] More computers: 2,000 Cookies\n *Adds +25 Cookie multiplier\n -There only so many USB ports </3\n");
+    printf(
+        "[4] Hire a relative to click: 50,000 Cookies\n *Adds +600 Cookie multiplier\n -Create your army!!!\n [5] Dunk them in milk: 200,000\n *Adds +1500 Cookie multiplier\n *It somehow duplicates now???\n[6] Make a cookie firm: 10,000,000\n *Adds +5000 Cookie Multiplier\n -We offer health insurance too");
+    printf(
+        "[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8]\n Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
+    if (state->rebirth > 1 && state->rebirth < 3) {
+        printf("[9] Buy the moon: 100,000,000,000\n *Adds +12000000000 Cookie multiplier\n -Just why...\n[10] Rent the sun: 999,890,111,111,111\n *Adds +70,000,000,000,000\n -Who the hell are you getting this shit from");
+    }else {
+        printf("[11] Just edit the source code: 1 Cookie\n *Adds inf or 0 cookies can't decide :3\n -Could've saved you and me ALOT of time.\n");
     }
     printf("\n\n$");
     int operator = get_int();
@@ -446,7 +451,41 @@ void shop(cookie* state) {
     }else if (state->multiplier < 1) {
         printf("item doesn't exist or not unclocked");
     }else {
-        printf("adding soon...")
+        printf("adding soon...");
+    }
+}
+
+void rebirth(cookie* state) {
+    if (state->rebirth < 2) {
+        printf(
+            "Rebirth costs 10,000,000,000 \nAre you sure you would like to rebirth?\n *Benefits include:\n  -More items unlocked\n  -2X Multiplier\n  -Nice flex\n\n[1]Yes\n[2]No\n\n$");
+        int operator = get_int();
+        if (operator == 1) {
+            if (state->cookies < 10000000000) {
+                printf("Bro... come back when you have enough ;-;\n");
+                sleep(1);
+                return;
+            }
+            state->cookies -= 10000000000;
+            state->rebirth+=1;
+        }
+    }else if (state->rebirth < 3) {
+        printf(
+            "Rebirth costs 1,000,000,000,000 \nAre you sure you would like to rebirth?\n *Benefits include:\n   -More items unclocked\n  -3X Multiplier\n\n[1] Yes\n[2] No\n\n$");
+        int operator = get_int();
+        if (operator == 1) {
+            if (state->cookies < 1000000000000) {
+                printf("Why do you even try.\n");
+                sleep(1);
+                return;
+            }
+            state->cookies -= 1000000000000;
+            state->rebirth+=1;
+        }
+    }else {
+        printf("How much patience do you have??????\n");
+        sleep(5);
+        return;
     }
 }
 
@@ -460,10 +499,10 @@ void clicker(void) {
         char operator = get_prompt_cookie();
         if (operator == 13 || operator == 10) {
             if (rand() % state->luck == 1) {
-                state->cookies += 2*state->multiplier;
+                state->cookies += 2*state->multiplier*state->rebirth;
                 state->bonus = true;
             }else {
-                state->cookies += state->multiplier;
+                state->cookies += state->multiplier*state->rebirth;
             }
         }else if (operator == 'H') {
             system(CLEAR);
@@ -475,6 +514,8 @@ void clicker(void) {
         }else if (operator == 'S') {
             system(CLEAR);
             shop(state);
+        }else if (operator == 'R') {
+            rebirth(state);
         }
     }
 }

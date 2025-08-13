@@ -10,7 +10,7 @@ typedef struct {
 } gamestate;
 
 typedef struct {
-    int cookies;
+    long long cookies;
     int multiplier;
     int luck;
     int rebirth;
