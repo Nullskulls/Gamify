@@ -5,12 +5,12 @@
 ---
 <h4> About: </h4>
 
-This all originally started as only minesweeper but I decided to pivot midway and expand on the project
-This project was built and finished over the span of 3 days I'm quite proud at how cast i executed this lol
+This all originally started as only minesweeper, but I decided to pivot midway and expand on the project
+This project was built and finished over the span of 3 days I'm quite proud at how cast I executed this lol
 ---
 <h4>Games: </h4>
 
-As of the moment i'm writing this only 2 games are avilable
+As of the moment I'm writing this only 2 games are available
 *Cookie Clicker
 *Minesweeper
 ---
@@ -19,13 +19,13 @@ scroll down there are instructions under minesweeper lol
 
 ---
 <h1 align="center">CookieClicker</h1>
-<h3>Imagine the cookie clicker we all know and love..</h3>
+<h3>Imagine the cookie clicker we all know and love…</h3>
 <h4>but shitty</h4>
 
 ---
 <h4>About: </h4>
-This was the second game i added to Gamify after minesweeper of course, I can't
-say that it turned out as i hoped but at the same time i can't complain since it was litterly made in 3 hours
+This was the second game I added to Gamify after minesweeper of course, I can't
+say that it turned out as I hoped but at the same time I can't complain since it was latterly made in 3 hours
 ---
 
 <h4>Features: <h4>

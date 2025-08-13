@@ -8,4 +8,9 @@ add_executable(minesweeper
         Source/game.c
         Source/draw.c
         Source/handlers.c
+        Source/hangman/game.c
+)
+
+target_include_directories(minesweeper PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Source
 )
