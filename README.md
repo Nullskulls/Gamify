@@ -1,3 +1,43 @@
+<h1 align="center">Gamify</h1>
+
+<h3>Classics reimagined for your terminal</h3>
+
+---
+<h4> About: </h4>
+
+This all originally started as only minesweeper but I decided to pivot midway and expand on the project
+This project was built and finished over the span of 3 days I'm quite proud at how cast i executed this lol
+---
+<h4>Games: </h4>
+
+As of the moment i'm writing this only 2 games are avilable
+*Cookie Clicker
+*Minesweeper
+---
+<h4> How to play: </h4>
+scroll down there are instructions under minesweeper lol
+
+---
+<h1 align="center">CookieClicker</h1>
+<h3>Imagine the cookie clicker we all know and love..</h3>
+<h4>but shitty</h4>
+
+---
+<h4>About: </h4>
+This was the second game i added to Gamify after minesweeper of course, I can't
+say that it turned out as i hoped but at the same time i can't complain since it was litterly made in 3 hours
+---
+
+<h4>Features: <h4>
+
+* big numbers go brrr that's all anyone cares about but if you do actually care then
+* Rebirth system that works
+* Massive shop that unlocks more as you rebirth
+* Doesn't crash! (maybe)
+* Sadly it won't do your taxes but working on that...
+---
+
+
 <h1 align="center">Minesweeper</h1>
 
 <h3>Minesweeper reimagined for your terminal.</h3>

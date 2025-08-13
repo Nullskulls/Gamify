@@ -336,14 +336,18 @@ void minesweeper() {
         //otherwise continue in the while loop
     }
 }
-
+/*
+ *Function to validate user input during the cookie clicker promps
+ */
 bool invalid_cookie(char operator) {
     if (operator != 'E' && operator != 'R' && operator != 'S' && operator != 10 && operator != 13 && operator != 'H') {
         return true;
     }
     return false;
 }
-
+/*
+ *Function to get and validate user input
+ */
 char  get_prompt_cookie() {
     char operator;
     do{
@@ -351,7 +355,9 @@ char  get_prompt_cookie() {
     }while (invalid_cookie(operator)); //while the user input is invalid keep scanning for input
     return operator;
 }
-
+/*
+ *Function to Set up the game state for the cookie game
+ */
 void setup_cookie_state(cookie* state) {
     state->rebirth = 1;
     state->bonus = false;
@@ -359,7 +365,9 @@ void setup_cookie_state(cookie* state) {
     state->multiplier = 1;
     state->luck = 100;
 }
-
+/*
+ *Function to get valid integer user input
+ */
 int get_int() {
     int operator;
     scanf("%i", &operator);
@@ -369,7 +377,9 @@ int get_int() {
     return get_int();
 }
 
-
+/*
+ *Function used to display the shop products to the user and allows them to buy too.
+ */
 void shop(cookie* state) {
     printf(
         "Available for purchase:-\n\n[1] Extra keyboard: 100 Cookies\n *Adds a +1 Cookie multiplier\n[2] More Fingers: 500 Cookies\n *Adds a +5 Cookie multiplier\n[3] More computers: 2,000 Cookies\n *Adds +25 Cookie multiplier\n -There only so many USB ports </3\n");
@@ -378,10 +388,10 @@ void shop(cookie* state) {
     printf(
         "[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8]\n Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
     if (state->rebirth > 1 && state->rebirth < 3) {
-        printf("[9] Buy the moon: 100,000,000,000\n *Adds +12000000000 Cookie multiplier\n -Just why...\n[10] Rent the sun: 999,890,111,111,111\n *Adds +70,000,000,000,000\n -Who the hell are you getting this shit from");
-    }else {
-        printf("[11] Just edit the source code: 1 Cookie\n *Adds inf or 0 cookies can't decide :3\n -Could've saved you and me ALOT of time.\n");
-    }
+        printf("\n[9] Buy the moon: 100,000,000,000\n *Adds +12000000000 Cookie multiplier\n -Just why...\n[10] Rent the sun: 999,890,111,111,111\n *Adds +70,000,000,000,000\n -Who the hell are you getting this shit from");
+    }else if (state->rebirth > 2) {
+        printf("\n[11] Just edit the source code: 1 Cookie\n *Adds inf or 0 cookies can't decide :3\n -Could've saved you and me ALOT of time.\n");
+    } //shop handler pretty self explantory
     printf("\n\n$");
     int operator = get_int();
     if (operator == 1) {
@@ -455,21 +465,26 @@ void shop(cookie* state) {
     }
 }
 
+
+/*
+ *Function used to display rebirth reqirements to the user and finalize their rebirth
+ */
 void rebirth(cookie* state) {
-    if (state->rebirth < 2) {
+    if (state->rebirth < 2) { //if the user hasn't reached their first rebirth
         printf(
-            "Rebirth costs 10,000,000,000 \nAre you sure you would like to rebirth?\n *Benefits include:\n  -More items unlocked\n  -2X Multiplier\n  -Nice flex\n\n[1]Yes\n[2]No\n\n$");
-        int operator = get_int();
+            "Rebirth costs 10,000,000,000 \nAre you sure you would like to rebirth?\n *Benefits include:\n  -More items unlocked\n  -2X Multiplier\n  -Nice flex\n\n[1]Yes\n[2]No\n\n$"); //prompt them for the reqs and benifits of the first rebirth
+        int operator = get_int(); //get if the user confirmed
         if (operator == 1) {
-            if (state->cookies < 10000000000) {
+            if (state->cookies < 10000000000) { //if they can't afford the rebirth tell them
                 printf("Bro... come back when you have enough ;-;\n");
                 sleep(1);
                 return;
             }
-            state->cookies -= 10000000000;
+            state->cookies -= 10000000000; //otherwise inc the rebirth counter and subtract the amount required
             state->rebirth+=1;
+            state->multiplier = 1;
         }
-    }else if (state->rebirth < 3) {
+    }else if (state->rebirth < 3) { //if they're on their second rebirth
         printf(
             "Rebirth costs 1,000,000,000,000 \nAre you sure you would like to rebirth?\n *Benefits include:\n   -More items unclocked\n  -3X Multiplier\n\n[1] Yes\n[2] No\n\n$");
         int operator = get_int();
@@ -481,40 +496,43 @@ void rebirth(cookie* state) {
             }
             state->cookies -= 1000000000000;
             state->rebirth+=1;
+            state->multiplier=1;
         }
-    }else {
+    }else { //didn't add this yet
         printf("How much patience do you have??????\n");
         sleep(5);
         return;
     }
 }
-
+/*
+ *Function that handles the main game logic loop
+ */
 void clicker(void) {
-    srand(time(NULL));
-    cookie* state = malloc(sizeof(cookie));
+    srand(time(NULL)); //seed random so its more playable
+    cookie* state = malloc(sizeof(cookie)); //allocate memory for the cookie game state
     setup_cookie_state(state);
     while (true) {
         system(CLEAR);
-        cookie_prompt(state);
+        cookie_prompt(state); //show the user their HUD (multiplier options count etc)
         char operator = get_prompt_cookie();
-        if (operator == 13 || operator == 10) {
-            if (rand() % state->luck == 1) {
+        if (operator == 13 || operator == 10) { //if user pressed enter
+            if (rand() % state->luck == 1) { //1 in 100 chance they get a 2x multi that time
                 state->cookies += 2*state->multiplier*state->rebirth;
-                state->bonus = true;
+                state->bonus = true; //set the bonus flag to true so it's displayed from the HUD
             }else {
-                state->cookies += state->multiplier*state->rebirth;
+                state->cookies += state->multiplier*state->rebirth; //otherwise don't double
             }
         }else if (operator == 'H') {
             system(CLEAR);
-            printf("How to play:\n\n->Press enter to get cookies\n->You by default have a 1 in 100 got getting a crit\n *A crit gives 2X your multiplier\nYou can increase your multiplier by pressing S to open the shop\n\nEnter to continue.\n\n$");
-            sleep(3);
-        }else if (operator == 'E') {
-            free(state);
-            break;
-        }else if (operator == 'S') {
+            printf("How to play:\n\n->Press enter to get cookies\n->You by default have a 1 in 100 got getting a crit\n *A crit gives 2X your multiplier\nYou can increase your multiplier by pressing S to open the shop\n\n$");// print instructions on how to play
+            sleep(7); //sleep so the user gets to see what was written
+        }else if (operator == 'E') { //if user chooses to exit
+            free(state); //clean up heap allocated memory
+            break; //exit the game loop to the outer game loop
+        }else if (operator == 'S') { //open shop
             system(CLEAR);
             shop(state);
-        }else if (operator == 'R') {
+        }else if (operator == 'R') { //rebirth
             rebirth(state);
         }
     }

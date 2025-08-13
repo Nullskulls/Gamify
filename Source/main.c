@@ -7,10 +7,14 @@ int main(void) {
         char operator = get_char();
         if (operator == 'P') {
             minesweeper();
-            break;
         }else if (operator == 'B') {
             clicker();
-            break;
+        }
+        system(CLEAR);
+        printf("Would you like to exit or switch games?\n[P] Exit\n [B] Continue\n\n$");
+        operator = get_char();
+        if (operator == 'P') {
+            exit(0);
         }
     }
 }
