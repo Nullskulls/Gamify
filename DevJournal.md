@@ -26,4 +26,5 @@ it segfaults when ran, The algorithm its self for this one is actually correct, 
 ---
 
 <h4> Day 3:</h4>
-Made the readme for the project and this devjournal also added score system and exit functionality.
+Made the readme for the project and this devjournal also added score system and exit functionality, Added point system that tracks highest score and current score based on how many flags have been placed correctly, Added clean heap freeing so valgrind doesn't haunt my dreams again, 
+Added different playing levels (Hard, Medium, Easy) with ranging size scaling and mine count for replayability, Made a play again option.

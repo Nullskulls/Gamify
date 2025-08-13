@@ -3,8 +3,13 @@
 #define HANDLERS_H
 #endif  //HANDLERS_H
 #ifdef _WIN32
+#include <windows.h>
+void sleep(unsigned int seconds) {
+    Sleep(seconds*1000);
+}
 #define CLEAR "cls"
 #else
+#include <unistd.h>
 #define CLEAR "clear"
 #endif
 

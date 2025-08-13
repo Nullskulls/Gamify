@@ -15,7 +15,9 @@ Completely written in C over the span of 2-3 days built with 2d nested arrays an
 * Score system (or if you're reading this before release which I doubt then soon)
 * Low ram usage (you guessed it no gui = low ram usage lol)
 * Cross-platform compatible (as long as you compile it yourself lol)
-
+* Point system 
+* Modes ranging from (Hard - Easy)
+* Working! (maybe)
 ---
 
 <h4> How to play? </h4>
@@ -30,7 +32,7 @@ you're sadly going to need to compile it yourself which should be easy assuming 
 first clone the repo open bash and write
 
 ```bash
-git clone "imma add it when I make the repo"
+git clone "https://github.com/Nullskulls/MineSweeper"
 ```
 then you're going to want to cd into said repo
 

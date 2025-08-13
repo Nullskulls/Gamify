@@ -9,7 +9,7 @@ void draw_state(char** state) {
     }
     printf("\n"); //start new line
     for (int i = 0; i < MAX_ROWS; i++) {
-        printf("%c #", 'P'-i); //draw index  P-A
+        printf("%c #", (MAX_ROWS-1+'A')-i); //draw index  P-A
         for (int j = 0; j < MAX_COLS; j++) {
             if (state[i][j] == 'F' || state[i][j] == '?' || state[i][j] == '*') { //if the tile has any of these chars print it as a char
                 printf("%c ", state[i][j]);

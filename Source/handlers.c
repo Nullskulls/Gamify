@@ -18,7 +18,7 @@ bool invalid_input(const char* str) {
  *Function to see if the user inputted operator is within the specified 3 (or if I add more)
  */
 bool invalid_operator(const char operator) {
-    if (operator == 'U' || operator == 'F' || operator == 'P' || operator == 'E') { //if the operator is (U, F, P, E)
+    if (operator == 'U' || operator == 'F' || operator == 'P' || operator == 'E' || operator == 'B' || operator == '`') { //if the operator is (U, F, P, E, B, `)
         return false; //return that the operator is valid
     }
     return true; //otherwise return invalid
@@ -37,7 +37,7 @@ pos get_input() {
         scanf("%2s", str);
     }while (invalid_input(str)); //keep getting input until the user input is valid
     pos position;
-    position.row = 'P' - str[0];
+    position.row = 'A' + MAX_ROWS - 1 - str[0];
     position.col = str[1] - 'A'; //turn the user input from chars to indexing
     free(str); //free the string allocated memory
     return position; //return the index of the user inputted tile
@@ -165,7 +165,7 @@ void floodfill(pos position, char** board, gamestate* state) {
         }
         fill(i, position, board, state);
     }
-    final_passthrough(board, state);
+    final_passthrough(board, state); //run one last pass through just incase something fell through the cracks
 }
 
 
@@ -173,14 +173,10 @@ void floodfill(pos position, char** board, gamestate* state) {
  *Function used to handle the user pressing on a tile
  */
 void press(pos position, char** board, gamestate* state) {
-    if (state->board[position.row][position.col] == '*') { //if said tile is a trap exit
+    if (state->board[position.row][position.col] == '*') { //if said tile is a trap mark game state as over
         state->gameover = true;
     }
-    pos* grid = malloc(sizeof(pos)*256); //test code
-    if (grid == NULL) {
-        exit(107);
-    }
-    floodfill(position, board, state);
+    floodfill(position, board, state); //otherwise start flood filling from said tile
 }
 
 
@@ -191,7 +187,7 @@ char get_char() {
     char operator;
     do{
         scanf("%c", &operator);
-    }while (invalid_operator(operator));
+    }while (invalid_operator(operator)); //while the user input is invalid keep scanning for input
     return operator;
 }
 
@@ -213,6 +209,10 @@ void player(gamestate* state, char** board) {
         state->gameover = true; // set the game over flag to be true so the end sequence can start
     }else if (operator == 'B') {
         //do nothing lol
+    }else if (operator == '`') { // cheat mode if you want to cheat lol
+        printf("Cheat mode activated!");
+        draw_state(state->board); //draw the inner game state so the user can see where the mines are
+        sleep(2); //sleep for two seconds so the user has time to actually react
     }else { //otherwise (which is going to be P) send position to a handler function to handle the user's press
         press(position, board, state);
     }
