@@ -9,6 +9,7 @@ add_executable(minesweeper
         Source/draw.c
         Source/handlers.c
         Source/hangman/game.c
+        Source/hangman/draw.c
 )
 
 target_include_directories(minesweeper PRIVATE

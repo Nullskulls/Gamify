@@ -384,9 +384,9 @@ void shop(cookie* state) {
     printf(
         "Available for purchase:-\n\n[1] Extra keyboard: 100 Cookies\n *Adds a +1 Cookie multiplier\n[2] More Fingers: 500 Cookies\n *Adds a +5 Cookie multiplier\n[3] More computers: 2,000 Cookies\n *Adds +25 Cookie multiplier\n -There only so many USB ports </3\n");
     printf(
-        "[4] Hire a relative to click: 50,000 Cookies\n *Adds +600 Cookie multiplier\n -Create your army!!!\n [5] Dunk them in milk: 200,000\n *Adds +1500 Cookie multiplier\n *It somehow duplicates now???\n[6] Make a cookie firm: 10,000,000\n *Adds +5000 Cookie Multiplier\n -We offer health insurance too");
+        "[4] Hire a relative to click: 50,000 Cookies\n *Adds +600 Cookie multiplier\n -Create your army!!!\n[5] Dunk them in milk: 200,000\n *Adds +1500 Cookie multiplier\n *It somehow duplicates now???\n[6] Make a cookie firm: 10,000,000\n *Adds +5000 Cookie Multiplier\n -We offer health insurance too");
     printf(
-        "[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8]\n Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
+        "\n[7] Expand.. : 200,000,000 Cookies\n *Adds +75,000 Cookie multiplier\n -We are everywhere.\n[8] Cookie Dungeon: 1,000,000,000\n *Adds +250,000 Cookie multiplier\n -Gotta store em somewhere ;-;");
     if (state->rebirth > 1 && state->rebirth < 3) {
         printf("\n[9] Buy the moon: 100,000,000,000\n *Adds +12000000000 Cookie multiplier\n -Just why...\n[10] Rent the sun: 999,890,111,111,111\n *Adds +70,000,000,000,000\n -Who the hell are you getting this shit from");
     }else if (state->rebirth > 2) {
