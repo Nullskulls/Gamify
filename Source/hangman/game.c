@@ -1,5 +1,5 @@
 #include "game.h"
-
+#include <ctype.h>
 #include "../draw.h"
 
 char* get_random_word() {
@@ -33,7 +33,7 @@ static char get_character(void) {
         ch = getchar();
         if (ch == EOF) return '\0';
     } while (ch == '\n' || ch == '\r');
-    return (char)ch;
+    return tolower(ch);
 }
 
 char get_hangman_input(void) {
@@ -41,17 +41,7 @@ char get_hangman_input(void) {
 
     printf("Enter a letter!\n\n$ ");
     op = get_character();
-
-    do {
-        system(CLEAR);
-        printf("Are you sure?\n[A] Yes\n[B] No\n$ ");
-        confirmation = get_character();
-        if (confirmation == 'B' || confirmation == 'b') {
-            printf("Enter a letter!\n\n$ ");
-            op = get_character();
-        }
-    } while (!(confirmation == 'A' || confirmation == 'a'));
-
+    system(CLEAR);
     return op;
 }
 
@@ -83,8 +73,8 @@ bool is_in_word(hangman* state, char choice) {
 
 void reveal_letters(hangman* state, char choice) {
     for (int i = 0; i < state->word_len; i++) {
-        if (state->word[i] == choice) {
-            state->revealed[i] = state->revealed[i];
+        if (state->word[i] == choice && state->revealed[i] == '_') {
+            state->revealed[i] = state->word[i];
             state->score++;
         }
     }
@@ -141,6 +131,7 @@ void hangman_loop(void) {
             system(CLEAR);
             printf("Congrats you won.... this time tho...\nword was %s", state->word);
             sleep(2);
+            return;
         }
     }
     system(CLEAR);

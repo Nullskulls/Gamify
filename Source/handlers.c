@@ -25,6 +25,13 @@ bool invalid_operator(const char operator) {
 }
 
 
+void str_to_upper(char *s) {
+    char* temp = malloc(3*sizeof(char));
+    for (int i = 0; s[i] != '\0'; i++) {
+        s[i] = toupper(s[i]);
+    }
+}
+
 /*
  *Function used to prompt the user for cords input (checking for validity implemented)
  */
@@ -35,6 +42,7 @@ pos get_input() {
     }
     do {
         scanf("%2s", str);
+        str_to_upper(str);
     }while (invalid_input(str)); //keep getting input until the user input is valid
     pos position;
     position.row = 'A' + MAX_ROWS - 1 - str[0];
@@ -187,6 +195,7 @@ char get_char() {
     char operator;
     do{
         scanf("%c", &operator);
+        operator = toupper(operator);
     }while (invalid_operator(operator)); //while the user input is invalid keep scanning for input
     return operator;
 }
@@ -352,6 +361,7 @@ char  get_prompt_cookie() {
     char operator;
     do{
         scanf("%c", &operator);
+        operator = toupper(operator);
     }while (invalid_cookie(operator)); //while the user input is invalid keep scanning for input
     return operator;
 }
