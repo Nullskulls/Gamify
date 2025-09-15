@@ -73,12 +73,53 @@ you're sadly going to need to compile it yourself which should be easy assuming 
 first clone the repo open bash and write
 
 ```bash
-git clone "https://github.com/Nullskulls/MineSweeper"
+git clone "https://github.com/Nullskulls/Gamify"
 ```
 then you're going to want to cd into said repo
-
+```bash
+cd Gamify
+```
+then make a build directory and cd into it
+```bash
+mkdir build && cd build
+```
+generate the program
+```bash
+cmake ..
+cmake --build.
+```
 <h5>or you have a better option, look up a YouTube tutorial I can barely compile my own app I'm not the best guide</h5>
 
 ---
+<h4>Now for windows!</h4>
+you're also going to need to clone the repository
+```bash
+git clone "https://github.com/Nullskulls/Gamify"
+```
 
+then cd into the project directory
+```bash
+cd Gamify
+```
+
+make the build folder
+```bash
+mkdir build
+cd build
+```
+
+generate Visual Studio solution or MinGW Makefiles
+```bash
+cmake .. -G "MinGW Makefiles"
+#if you want to use Visual Studio solution run
+#cmake ..
+```
+finally build it
+```bash
+cmake --build .
+```
+
+<h5>Or you can skip all these steps for windows and download the precompiled binary from the latest github release!</h5>
+
+---
 <h4>A thank you to hackclub for all the support and to the shipwrights team (if they ever read this) </h4> 
