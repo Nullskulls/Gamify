@@ -1,5 +1,5 @@
-#ifndef DRAW_H
-#define DRAW_H
+#ifndef HANG_DRAW_H
+#define HANG_DRAW_H
 #ifdef _WIN32
 #include <windows.h>
 void sleep(unsigned int seconds);
@@ -24,4 +24,4 @@ typedef struct {
     int score;
 }hangman;
 void display_state(const hangman* state);
-#endif //DRAW_H
+#endif //HANG_DRAW_H
